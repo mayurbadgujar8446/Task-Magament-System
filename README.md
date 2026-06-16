@@ -1,7 +1,4 @@
 📅 Smart Scheduling System
-Developed a task scheduling system that uses Greedy and Dynamic Programming algorithms to generate optimal conflict-free schedules. The application allows users to manage tasks, calculate maximum profit, visualize schedules, and store task data using Flask and SQLite.
-
-📅 Smart Scheduling System
 
 A web-based task scheduling system that optimizes task selection using the Weighted Interval Scheduling Algorithm (Greedy + Dynamic Programming). The system helps users manage tasks, avoid scheduling conflicts, and maximize overall profit or priority through intelligent schedule generation.
 
