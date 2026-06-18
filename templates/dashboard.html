@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<span class="section-eyebrow">Overview</span>
 <h2>Dashboard</h2>
+
 <div class="row g-3 mb-4">
   <div class="col-md-6">
-    <div class="card stat-card">
+    <div class="card stat-card stat-card--primary">
       <div class="card-body">
         <h5>Total Number of Tasks</h5>
         <p class="display-6">{{ total_tasks }}</p>
@@ -12,7 +14,7 @@
     </div>
   </div>
   <div class="col-md-6">
-    <div class="card stat-card">
+    <div class="card stat-card stat-card--coral">
       <div class="card-body">
         <h5>Total Profit (All Tasks)</h5>
         <p class="display-6">{{ total_profit }}</p>
@@ -48,7 +50,12 @@
       </tr>
       {% else %}
       <tr>
-        <td colspan="5" class="text-center">No tasks available. Add a task to get started.</td>
+        <td colspan="5">
+          <div class="empty-state">
+            <strong>No tasks yet</strong>
+            Add a task to start building your schedule.
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
