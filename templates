@@ -1,0 +1,5 @@
+templates/dashboard.html
+templates/base.html
+templates/tasks.html
+templates/add_task.html
+templates/schedule.html
