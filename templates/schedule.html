@@ -2,11 +2,14 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>Smart Schedule (Greedy + DP)</h2>
+  <div>
+    <span class="section-eyebrow">Optimize</span>
+    <h2 class="mb-0">Smart Schedule (Greedy + DP)</h2>
+  </div>
   <a href="{{ url_for('generate_schedule') }}" class="btn btn-success">Generate Smart Schedule</a>
 </div>
 
-<h4 class="mt-4">All Tasks (Sorted by End Time - Greedy Step)</h4>
+<h4 class="mt-4">All Tasks (Sorted by End Time — Greedy Step)</h4>
 <div class="table-responsive mb-4">
   <table class="table table-bordered table-sm">
     <thead>
@@ -29,7 +32,12 @@
       </tr>
       {% else %}
       <tr>
-        <td colspan="5" class="text-center">No tasks available for schedule generation.</td>
+        <td colspan="5">
+          <div class="empty-state">
+            <strong>Nothing to schedule yet</strong>
+            Add tasks first so the algorithm has something to work with.
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -37,11 +45,11 @@
 </div>
 
 <h4>Selected Optimal Tasks (DP Result)</h4>
-<p><strong>Total Profit:</strong> {{ optimal_profit }}</p>
+<p><strong>Total Profit:</strong> <span style="font-family: var(--font-mono); color: var(--color-teal); font-weight: 600;">{{ optimal_profit }}</span></p>
 
 <div class="table-responsive mb-4">
   <table class="table table-striped table-bordered">
-    <thead class="table-success">
+    <thead>
       <tr>
         <th>ID</th>
         <th>Task Name</th>
@@ -61,7 +69,11 @@
       </tr>
       {% else %}
       <tr>
-        <td colspan="5" class="text-center">No non-overlapping tasks selected.</td>
+        <td colspan="5">
+          <div class="empty-state">
+            <strong>No non-overlapping tasks selected</strong>
+          </div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -70,13 +82,27 @@
 
 <h4>Conflict-Free Timeline View</h4>
 <div class="timeline-wrapper">
-  {% for task in selected_tasks %}
-  <div class="timeline-block">
-    <div class="timeline-time">{{ task.start_time }} - {{ task.end_time }}</div>
-    <div class="timeline-task">{{ task.name }} (Profit: {{ task.profit }})</div>
+  {% if selected_tasks %}
+  {% set min_time = selected_tasks | map(attribute='start_time') | min %}
+  {% set max_time = selected_tasks | map(attribute='end_time') | max %}
+  {% set span = (max_time - min_time) if (max_time - min_time) > 0 else 1 %}
+  <div class="timeline-track">
+    {% for task in selected_tasks %}
+    {% set left_pct = ((task.start_time - min_time) / span * 100) %}
+    {% set width_pct = ((task.end_time - task.start_time) / span * 100) %}
+    <div class="timeline-row">
+      <div class="timeline-row-time">{{ task.start_time }}–{{ task.end_time }}</div>
+      <div class="timeline-row-bar-wrap">
+        <div class="timeline-row-bar" style="left: {{ left_pct }}%; width: {{ width_pct if width_pct > 6 else 6 }}%;">
+          <span>{{ task.name }}</span>
+          <span class="profit-tag">+{{ task.profit }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
   {% else %}
-  <p>No timeline to display.</p>
-  {% endfor %}
+  <p class="timeline-empty">No timeline to display.</p>
+  {% endif %}
 </div>
 {% endblock %}
